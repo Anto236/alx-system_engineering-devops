@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# File path
+filepath="/etc/passwd"
+
+# Check if the file exists
+if [ -e "$filepath" ];
+then
+# Read the file line by line using while loop
+	while IFS=':' read -r user _ _ uid _ _ home _;
+	do
+    		echo "$user:$uid:$home"
+  	done < "$filepath"
+else
+	echo "The file $filepath does not exist"
+ 	exit 1
+fi
