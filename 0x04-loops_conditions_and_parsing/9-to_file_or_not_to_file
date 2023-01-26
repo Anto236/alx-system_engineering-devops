@@ -16,7 +16,7 @@ then
 	echo "school file exists"
 else
 	echo "school file does not exist"
-	#exit 1
+	exit 1
 fi
 
 #check if file is empty
