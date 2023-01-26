@@ -12,5 +12,8 @@ do
 	then
 		continue
 	fi
+	#echo statement uses parameter expansion to remove
+	#the part of the file name before the first dash
+	#and only display the part after it
 	echo "${file##*-}"
 done
