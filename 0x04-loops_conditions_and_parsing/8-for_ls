@@ -8,5 +8,9 @@
 
 for file in *;
 do
-	echo "$file" | cut -d '-' -f 2
+	if [[ $file == .* ]];
+	then
+		continue
+	fi
+	echo "${file##*-}"
 done
