@@ -16,6 +16,7 @@ then
 	echo "school file exists"
 else
 	echo "school file does not exist"
+	#exits the script with a status code of 1
 	exit 1
 fi
 
