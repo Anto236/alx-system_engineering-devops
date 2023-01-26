@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#a Bash script that displays:
+#The content of the current directory
+#In a list format
+#Where only the part of the name after the first dash is displayed
+#You must use the for loop
+#Do not display hidden files
+
+for file in *;
+do
+	if [[ $file == .* ]];
+	then
+		continue
+	fi
+	#echo statement uses parameter expansion
+	#to remove the part of the file name before the first dash
+	#and only display the part after it
+	echo "${file##*-}"
+done

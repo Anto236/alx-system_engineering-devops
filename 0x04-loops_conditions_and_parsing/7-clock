@@ -15,5 +15,6 @@ do
 		minutes=$((minutes+1))
 	done
 	hours=$((hours+1))
+	#minute reset to 1 each time
 	minutes=1
 done
