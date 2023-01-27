@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#Starts manage_my_process
 
 PIDFILE=/var/run/my_process.pid
 
