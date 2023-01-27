@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#Bash script that displays lines containing the bash word
+# shellcheck disable=SC2009
+
+#grep command with the option --word-regexp to match
+#only the word 'bash' in the command name field
+ps -aux --forest | grep --word-regexp bash
