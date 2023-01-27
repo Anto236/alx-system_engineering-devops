@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
-#Bash script that creates a subprocess
-./lib/lsb/init-functions
 
 PIDFILE=/var/run/my_process.pid
 
 start() {
-    ./manage_my_process &
+    #start the manage_my_process script in background
+    nohup ./manage_my_process >/dev/null 2>&1 &
     echo "$!" > "$PIDFILE"
 }
 
 stop() {
-    sudo kill -15 "$(cat "$PIDFILE")" && rm -f "$PIDFILE"
+    #stop the manage_my_process script
+    if [ -f "$PIDFILE" ]; then
+        kill -15 "$(cat "$PIDFILE")" && rm -f "$PIDFILE"
+    else
+        echo "manage_my_process is not running"
+    fi
 }
 
 case "$1" in 
