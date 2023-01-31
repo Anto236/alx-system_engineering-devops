@@ -6,7 +6,7 @@
 argument = ARGV[0]
 
 # Define the regex pattern
-pattern = /hbt+n/
+pattern = /hbt*n/
 
 # Scan method to find instance of pattern
 result = argument.scan(pattern)
