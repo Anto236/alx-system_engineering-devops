@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Accepts a string as an argument
+# Displays Usage: 5-is_the_host_on_the_network {IP_ADDRESS} if no argument passed
+# Ping the IP 5 times
+
+# check if no argument is passed
+if [ $# -eq 0 ];
+then
+	echo "Usage: 5-is_the_host_on_the_network {IP_ADDRESS}"
+else
+	# ping  times
+	for _ in {1..5};
+		do
+			ping -c 1 $1
+		done
+fi
