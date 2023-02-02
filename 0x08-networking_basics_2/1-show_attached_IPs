@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Get all active network interfaces
+
+interfaces=$(ip -o -4 addr show up primary | awk '{print $2}')
+
+# Loop through each interface and display its IPv4 address
+for interface in $interfaces;
+do
+	ip=$(ip -o -4 addr show "$interface" | awk '{print $4}' | cut -d '/' -f1)
+	echo "$ip"
+done
