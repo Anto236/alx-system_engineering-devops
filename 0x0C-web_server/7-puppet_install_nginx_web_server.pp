@@ -5,7 +5,7 @@ package { 'nginx':
   name   => 'nginx'
 }
 file { 'path_to_html':
-  content => 'Holberton School',
+  content => 'Hello World!',
   path    => '/var/www/html/index.nginx-debian.html'
 }
 file_line { 'put_in_line':
