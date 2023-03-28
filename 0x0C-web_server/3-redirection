@@ -11,10 +11,10 @@ server {
     listen 80 default_server;
     listen [::]:80 default_server;
     server_name _;
-    rewrite ^/redirect_me$ http://www.youtube.com/watch?v=QH2-TGUlwu4/ permanent;
+    rewrite ^/redirect_me$ http://www.example.com/ permanent;
 }
 '
 sed -i "s|server {|&$REDIRECT_CONFIG|" /etc/nginx/sites-available/default
 
 # Restart Nginx
-service nginx restart
+systemctl restart nginx
