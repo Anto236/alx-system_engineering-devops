@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Script that installs Nginx server
+apt-get -y update
+apt-get -y install nginx
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+# Configure redirect for /redirect_me
+sed -i "/server_name _;/ a\\\trewrite ^/redirect_me http://www.youtube.com permanent;" /etc/nginx/sites-available/default
+service nginx start
