@@ -1,32 +1,38 @@
-# Install Nginx
-package { 'nginx':
-  ensure => installed,
-}
+#Install Nginx web server (w/ Puppet)
 
-# Ensure Nginx service is running and enabled on boot
-service { 'nginx':
-  ensure => running,
-  enable => true,
-}
+class nginx_server {
 
-# Configure Nginx server
-file { '/etc/nginx/sites-available/default':
-  ensure => file,
-  content => '
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+  # Install Nginx
+  package { 'nginx':
+    ensure => installed,
+  }
 
-    # Redirect /redirect_me
-    if ($request_uri = /redirect_me) {
-        return 301  https://www.youtube.com/watch?v=QH2-TGUlwu4;
+  # Ensure Nginx service is running and enabled on boot
+  service { 'nginx':
+    ensure => running,
+    enable => true,
+  }
+
+  # Configure Nginx server
+  file { '/etc/nginx/sites-available/default':
+    ensure => file,
+    content => '
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        # Redirect /redirect_me
+        if ($request_uri = /redirect_me) {
+            return 301  https://www.youtube.com/watch?v=QH2-TGUlwu4;
+        }
+
+        # Handle root request
+        location / {
+            return 200 "Hello World!";
+        }
     }
+    ',
+    notify => Service['nginx'],
+  }
 
-    # Handle root request
-    location / {
-        return 200 "Hello World!";
-    }
-}
-',
-  notify => Service['nginx'],
 }
