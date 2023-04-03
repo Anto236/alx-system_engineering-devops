@@ -28,6 +28,6 @@ printf %s "server {
     }
 }" > /etc/nginx/sites-available/default
 
-sudo sed -i "/server {/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-available/default
+sudo sed -i "/server {/a add_header X-Served-By $(hostname);" /etc/nginx/sites-available/default
 
 sudo service nginx restart
