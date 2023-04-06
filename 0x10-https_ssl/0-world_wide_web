@@ -12,7 +12,7 @@ domain="$1"
 subdomain="$2"
 
 # Default subdomains to audit
-subdomains=("www" "102807-lb-01" "102807-web-01" "102807-web-02")
+subdomains=("www" "lb-01" "web-01" "web-02")
 
 # If a specific subdomain is provided, only audit that subdomain
 if [[ -n "$subdomain" ]]; then
