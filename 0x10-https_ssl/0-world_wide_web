@@ -1,30 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Usage: ./1-world_wide_web <domain> <subdomain>
+# Display information about subdomains.
 
-# Function to print record info
-print_record_info () {
-    echo "The subdomain $1 is a $2 record and points to $3"
+domain_information () {
+    line=$(dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | tr '\t' '\n' | tail -2 | tr '\n' ' ')
+    echo "$2 $line" | awk '{print "The subdomain " $1 " is a " $2 " record and points to " $3}'
 }
 
-# Domain name to audit
-domain="$1"
-
-# Specific subdomain to audit (optional)
-subdomain="$2"
-
-# Default subdomains to audit
-subdomains=("www" "lb-01" "web-01" "web-02")
-
-# If a specific subdomain is provided, only audit that subdomain
-if [[ -n "$subdomain" ]]; then
-    # Get record info for the specified subdomain
-    record_info=$(dig +short "$subdomain.$domain" | awk '{print $1}')
-    record_type=$(dig +short "$subdomain.$domain" | awk '{print $4}')
-    print_record_info "$subdomain.$domain" "$record_type" "$record_info"
-else
-    # Audit all default subdomains
-    for sub in "${subdomains[@]}"; do
-        record_info=$(dig +short "$sub.$domain" | awk '{print $1}')
-        record_type=$(dig +short "$sub.$domain" | awk '{print $4}')
-        print_record_info "$sub.$domain" "$record_type" "$record_info"
-    done
+if [ "$#" == 1 ]
+then
+  domain_information "$1" "www"
+  domain_information "$1" "lb-01"
+  domain_information "$1" "web-01"
+  domain_information "$1" "web-02"
+elif [ "$#" == 2 ]
+then
+  domain_information "$1" "$2"
 fi
