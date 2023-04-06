@@ -1,30 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Script that displays information about subdomains.
 
-# Function to print record info
-print_record_info () {
-    echo "The subdomain $1 is a $2 record and points to $3"
+func () {
+    if [ -n "$2" ]
+    then
+    dig "$2.$1" | grep -A1 'ANSWER SECTION:' | paste - - | awk -v sd="$2" '{print "The subdomain " sd " is a " $7 " record and points to " $8}'
+    else
+    dig "www.$1" | grep -A1 'ANSWER SECTION:' | paste - - | awk '{print "The subdomain www is a " $7 " record and points to " $8}'
+    dig "lb-01.$1" | grep -A1 'ANSWER SECTION:' | paste - - | awk '{print "The subdomain lb-01 is a " $7 " record and points to " $8}'
+    dig "web-01.$1" | grep -A1 'ANSWER SECTION:' | paste - - | awk '{print "The subdomain web-01 is a " $7 " record and points to " $8}'
+    dig "web-02.$1" | grep -A1 'ANSWER SECTION:' | paste - - | awk '{print "The subdomain web-02 is a " $7 " record and points to " $8}'
+    fi
 }
 
-# Domain name to audit
-domain="$1"
-
-# Specific subdomain to audit (optional)
-subdomain="$2"
-
-# Default subdomains to audit
-subdomains=("www" "lb-01" "web-01" "web-02")
-
-# If a specific subdomain is provided, only audit that subdomain
-if [[ -n "$subdomain" ]]; then
-    # Get record info for the specified subdomain
-    record_info=$(dig +short "$subdomain.$domain" | awk '{print $1}')
-    record_type=$(dig +short "$subdomain.$domain" | awk '{print $4}')
-    print_record_info "$subdomain.$domain" "$record_type" "$record_info"
-else
-    # Audit all default subdomains
-    for sub in "${subdomains[@]}"; do
-        record_info=$(dig +short "$sub.$domain" | awk '{print $1}')
-        record_type=$(dig +short "$sub.$domain" | awk '{print $4}')
-        print_record_info "$sub.$domain" "$record_type" "$record_info"
-    done
-fi
+func "$1" "$2"
