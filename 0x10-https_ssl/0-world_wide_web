@@ -2,7 +2,7 @@
 
 # Function to print record info
 print_record_info () {
-    echo "The subdomain $1 is A $2 record and points to $3"
+    echo "The subdomain $1 is a $2 record and points to $3"
 }
 
 # Domain name to audit
