@@ -1,25 +1,21 @@
 #!/usr/bin/python3
-""" Script that uses JSONPlaceholder API to get information about employee """
+"""Script to use REST API to gather information"""
+
 import requests
 import sys
 
-
 if __name__ == "__main__":
-    url = 'https://jsonplaceholder.typicode.com/'
+    url_target = "https://jsonplaceholder.typicode.com/"
+    employee = requests.get(url_target + "users/{}".format(sys.argv[1])).json()
+    tasks = requests.get(url_target + "todos", params={
+                        "userId": sys.argv[1]}).json()
 
-    user = '{}users/{}'.format(url, sys.argv[1])
-    res = requests.get(user)
-    json_o = res.json()
-    print("Employee {} is done with tasks".format(json_o.get('name')), end="")
+    completetasks = []
+    for todos in tasks:
+        if todos.get("completed") is True:
+            completetasks.append(todos.get("title"))
 
-    todos = '{}todos?userId={}'.format(url, sys.argv[1])
-    res = requests.get(todos)
-    tasks = res.json()
-    l_task = []
-    for task in tasks:
-        if task.get('completed') is True:
-            l_task.append(task)
-
-    print("({}/{}):".format(len(l_task), len(tasks)))
-    for task in l_task:
-        print("\t {}".format(task.get("title")))
+    print("Employee {} is done with tasks({}/{}):".format(
+            employee.get("name"), len(completetasks), len(tasks)))
+    for title in completetasks:
+        print("\t {}".format(title))
