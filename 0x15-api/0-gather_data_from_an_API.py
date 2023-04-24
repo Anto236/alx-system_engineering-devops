@@ -10,31 +10,35 @@ import requests
 import sys
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print("Please provide an employee ID as a parameter")
+    if len(sys.argv) != 2:
+        print('Usage: {} EMPLOYEE_ID'.format(sys.argv[0]))
         sys.exit(1)
 
     employee_id = sys.argv[1]
-    api = 'https://jsonplaceholder.typicode.com/'
 
-    # Fetch user details
-    user = requests.get(api + 'users/{}'.format(employee_id)).json()
-    employee_name = user['name']
+    # Fetch user data
+    response = requests.get(
+        'https://jsonplaceholder.typicode.com/users/{}'.format(employee_id))
+    if response.status_code != 200:
+        print('Error: could not fetch user data')
+        sys.exit(1)
+    employee_name = response.json()['name']
 
-    # Fetch user's TODO list
-    todos = requests.get(api + 'todos', params={'userId': employee_id}).json()
+    # Fetch TODO list data
+    response = requests.get(
+        'https://jsonplaceholder.typicode.com/todos?userId={}'.format(employee_id))
+    if response.status_code != 200:
+        print('Error: could not fetch TODO list data')
+        sys.exit(1)
+    todo_data = response.json()
 
-    # Count number of completed and total tasks
-    num_completed = 0
-    total_tasks = len(todos)
-    completed_tasks = []
-    for todo in todos:
+    # Compute TODO list progress
+    total_tasks = len(todo_data)
+    completed_tasks = sum(todo['completed'] for todo in todo_data)
+
+    # Print progress report
+    print('Employee {} is done with tasks({}/{}):'.format(employee_name,
+          completed_tasks, total_tasks))
+    for todo in todo_data:
         if todo['completed']:
-            num_completed += 1
-            completed_tasks.append(todo['title'])
-
-    # Print output in the required format
-    print("Employee {} is done with tasks({}/{})".format(employee_name,
-          num_completed, total_tasks))
-    for task in completed_tasks:
-        print("\t {} {}".format("\t", task))
+            print('\t', todo['title'])
