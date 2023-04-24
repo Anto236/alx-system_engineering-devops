@@ -1,26 +1,31 @@
 #!/usr/bin/python3
-"""fetches information from JSONplaceholder API and exports to CSV"""
+""" Uses a REST API, fetching data about a given employee
+    (identified by their id passed to sript as argument) &
+    exports the data (of all tasks owned by user) in the CSV format
+"""
+import csv
+import requests
+import sys
 
-from csv import DictWriter, QUOTE_ALL
-from requests import get
-from sys import argv
 
-
-if __name__ == "__main__":
-    main_url = "https://jsonplaceholder.typicode.com"
-    todo_url = main_url + "/user/{}/todos".format(argv[1])
-    name_url = main_url + "/users/{}".format(argv[1])
-    todo_result = get(todo_url).json()
-    name_result = get(name_url).json()
-
-    todo_list = []
-    for todo in todo_result:
-        todo_dict = {}
-        todo_dict.update({"user_ID": argv[1], "username": name_result.get(
-            "username"), "completed": todo.get("completed"),
-                          "task": todo.get("title")})
-        todo_list.append(todo_dict)
-    with open("{}.csv".format(argv[1]), 'w', newline='') as f:
-        header = ["user_ID", "username", "completed", "task"]
-        writer = DictWriter(f, fieldnames=header, quoting=QUOTE_ALL)
-        writer.writerows(todo_list)
+if __name__ == '__main__':
+    # get the data
+    if len(sys.argv) > 1:
+        api = 'https://jsonplaceholder.typicode.com/'
+        user = requests.get(api + 'users/{}'.format(sys.argv[1]))
+        todos = requests.get(api + 'todos')
+        user_todos = []
+        for todo in todos.json():
+            if todo.get('userId') == int(sys.argv[1]):
+                user_todos.append(todo)
+        # print(user_todos)
+        file_name = '{}.csv'.format(sys.argv[1])
+        with open(file_name, 'w', newline='') as f:
+            writer = csv.writer(f, quoting=csv.QUOTE_ALL)
+            for todo in user_todos:
+                row = []
+                row.extend([sys.argv[1], user.json().get('username')])
+                row.extend([todo.get('completed'), todo.get('title')])
+                writer.writerow(row)
+    else:
+        pass
