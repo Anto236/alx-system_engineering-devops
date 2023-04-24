@@ -8,6 +8,7 @@ if __name__ == '__main__':
     from requests import get
     from sys import argv
 
+<<<<<<< HEAD
     #  get args
     userId = int(argv[1])
 
@@ -30,3 +31,14 @@ if __name__ == '__main__':
           user['name'], todos_completed, todos_total))
     for todo in [todo for todo in user_todos if todo['completed']]:
         print('\t {}'.format(todo['title']))
+=======
+    todo_num = len(todo_result)
+    todo_complete = len([todo for todo in todo_result
+                         if todo.get("completed")])
+    name = name_result.get("name")
+    print("Employee {} is done with tasks({}/{}):"
+          .format(name, todo_complete, todo_num))
+    for todo in todo_result:
+        if (todo.get("completed")):
+            print("\t {}".format(todo.get("title")))
+>>>>>>> 935381a415cfa3ba5178a42229a8281bbe1be98d
