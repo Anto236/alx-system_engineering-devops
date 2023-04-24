@@ -1,32 +1,31 @@
 #!/usr/bin/python3
+""" Uses a REST API, fetching data about a given employee
+    (identified by their id passed in as an arg).
+    Returns:
+            information about thir TODO list progress
+    Requirements:
+            must use urllib or requests module
 """
-Using REST API, for a given employee ID, returns information about
-his/her TODO list progress.
-"""
-
+import requests
+import sys
+​
+​
 if __name__ == '__main__':
-    from requests import get
-    from sys import argv
-
-    #  get args
-    userId = int(argv[1])
-
-    #  Fetch todos and user
-    todos = get('https://jsonplaceholder.typicode.com/todos').json()
-    user = get('https://jsonplaceholder.typicode.com/users/{}'.format(
-               userId)).json()
-
-    #  Extract user specific todos
-    user_todos = []
-    for todo in todos:
-        if todo['userId'] == userId:
-            user_todos.append(todo)
-
-    #  get todos analytics
-    todos_total = len(user_todos)
-    todos_completed = sum(todo['completed'] for todo in user_todos)
-
-    print('Employee {} is done with tasks({}/{}):'.format(
-          user['name'], todos_completed, todos_total))
-    for todo in [todo for todo in user_todos if todo['completed']]:
-        print('\t {}'.format(todo['title']))
+    if len(sys.argv) > 1:
+        # get the info
+        api = 'https://jsonplaceholder.typicode.com/'
+        user = requests.get(api + 'users/{}'.format(sys.argv[1]))
+        todos = requests.get(api + 'todos')
+        # print(user.json().get('name'))
+        user_todos = []
+        total = 0
+        todos = todos.json()
+        for todo in todos:
+            if todo.get('userId') == int(sys.argv[1]):
+                total += 1
+                if todo.get('completed'):
+                    user_todos.append(todo)
+        print('Employee {} is done with tasks({}/{}):'
+              .format(user.json().get('name'), len(user_todos), total))
+        for todo in user_todos:
+            print('\t {}'.format(todo.get('title')))
