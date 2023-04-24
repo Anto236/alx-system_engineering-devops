@@ -1,35 +1,36 @@
 #!/usr/bin/python3
 """
-Checks student output for returning info from REST API
+Check student .CSV output of user information
 """
 
+import csv
 import requests
 import sys
 
-users_url = "https://jsonplaceholder.typicode.com/users"
+users_url = "https://jsonplaceholder.typicode.com/users?id="
 todos_url = "https://jsonplaceholder.typicode.com/todos"
 
 
-def first_line(id):
-    """ Fetch user name """
+def user_info(id):
+    """ Check user information """
 
-    resp = requests.get(users_url).json()
+    total_tasks = 0
+    response = requests.get(todos_url).json()
+    for i in response:
+        if i['userId'] == id:
+            total_tasks += 1
 
-    name = None
-    for i in resp:
-        if i['id'] == id:
-            name = i['name']
+    num_lines = 0
+    with open(str(id) + ".csv", 'r') as f:
+        for line in f:
+            if not line == '\n':
+                num_lines += 1
 
-    filename = 'student_output'
-
-    with open(filename, 'r') as f:
-        first = f.readline().strip()
-
-    if name in first:
-        print("Employee Name: OK")
+    if total_tasks == num_lines:
+        print("Number of tasks in CSV: OK")
     else:
-        print("Employee Name: Incorrect")
+        print("Number of tasks in CSV: Incorrect")
 
 
 if __name__ == "__main__":
-    first_line(int(sys.argv[1]))
+    user_info(int(sys.argv[1]))
