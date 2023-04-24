@@ -1,38 +1,31 @@
 #!/usr/bin/python3
-"""get data from jsonplaceholder"""
+""" Uses a REST API, fetching data about a given employee
+    (identified by their id passed in as an arg).
+    Returns:
+            information about thir TODO list progress
+    Requirements:
+            must use urllib or requests module
+"""
 import requests
 import sys
 
+
 if __name__ == '__main__':
-    """REST API manipulations"""
-    if len(sys.argv) > 1 and isinstance(eval(sys.argv[1]), int):
-        pass
-    else:
-        sys.exit(0)
-
-    BASE_API = "https://jsonplaceholder.typicode.com/"
-    employee_id = sys.argv[1]
-    user_response_url = BASE_API + "users/{}".format(employee_id)
-    todo_response_url = BASE_API + "users/{}/todos".format(employee_id)
-
-    user_response = requests.get(user_response_url).json()
-    todo_response = requests.get(todo_response_url).json()
-
-    employee_name = user_response.get('name')
-
-    num_tasks_done = 0
-    for todo in todo_response:
-        if todo.get("completed"):
-            num_tasks_done += 1
-
-    total_num_tasks = 0
-    for todo in todo_response:
-        total_num_tasks += 1
-
-    print("Employee {} is done with tasks({}/{}):".format(employee_name,
-          num_tasks_done, total_num_tasks))
-
-    for todo in todo_response:
-        task_title = todo.get("title")
-        if (todo.get("completed")):
-            print("\t {}".format(task_title))
+    if len(sys.argv) > 1:
+        # get the info
+        api = 'https://jsonplaceholder.typicode.com/'
+        user = requests.get(api + 'users/{}'.format(sys.argv[1]))
+        todos = requests.get(api + 'todos')
+        # print(user.json().get('name'))
+        user_todos = []
+        total = 0
+        todos = todos.json()
+        for todo in todos:
+            if todo.get('userId') == int(sys.argv[1]):
+                total += 1
+                if todo.get('completed'):
+                    user_todos.append(todo)
+        print('Employee {} is done with tasks({}/{}):'
+              .format(user.json().get('name'), len(user_todos), total))
+        for todo in user_todos:
+            print('\t {}'.format(todo.get('title')))
