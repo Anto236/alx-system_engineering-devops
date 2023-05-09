@@ -8,6 +8,7 @@ import requests
 
 
 def top_ten(subreddit):
+    """ Queries to Reddit API """
     url = f"https://www.reddit.com/r/{subreddit}/hot.json"
     headers = {'User-Agent': 'Custom User-Agent'}
     response = requests.get(url, headers=headers, allow_redirects=False)
