@@ -1,0 +1,2 @@
+curl -X GET "https://api.datadoghq.com/api/v1/dashboard?api_key=51c71a24a8558816a707cccb18e7994f&application_key=6e2092e340dd1d4bea61ddceca1478d229f232dd" | jq '.'
+
