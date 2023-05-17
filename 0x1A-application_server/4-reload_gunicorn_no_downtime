@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Gracefully reloads Gunicorn
+
+# Find the process IDs of Gunicorn workers
+worker_pids=$(ps auxf | grep "gunicorn" | grep -v "grep" | awk '{print $2}')
+
+# Send a signal to each worker to gracefully reload
+for pid in $worker_pids; do
+    echo "Reloading Gunicorn worker: $pid"
+    kill -HUP $pid
+done
+
+echo "Gunicorn reloaded gracefully."
